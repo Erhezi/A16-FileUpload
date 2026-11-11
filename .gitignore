@@ -1,0 +1,29 @@
+# Made on each machine, never copied to the server (README, Deploy step 1)
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+logs/
+*.log
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Wave exports hold real savings data; keep them out even when dropped in this folder
+uploads/
+*.xlsx
+*.xlsm
+*.xls
+~$*
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store

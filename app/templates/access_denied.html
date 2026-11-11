@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Access Needed - File Upload{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2><i class="fas fa-lock"></i> Access Needed</h2>
+    <p class="text-muted">
+        Your account does not have access to the Wave File refresh yet.
+        {% if template_current_user.role %}Your current role is <strong>{{ template_current_user.role.name }}</strong>.{% endif %}
+    </p>
+    <a class="btn btn-primary"
+       href="mailto:procurementdatateam@montefiore.org?subject=Wave%20File%20Refresh%20Access%20Request&amp;body=Please%20give%20{{ template_current_user.username|urlencode }}%20access%20to%20the%20Wave%20File%20refresh.">
+        <i class="fas fa-envelope me-1"></i>Request Access
+    </a>
+</div>
+{% endblock %}
