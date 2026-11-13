@@ -97,7 +97,8 @@ class Config:
     WAVE_PBI_LAST_REFRESH = setting('WAVE_PBI_LAST_REFRESH', '17:00')
     WAVE_PBI_REFRESH_INTERVAL_MINUTES = int(setting('WAVE_PBI_REFRESH_INTERVAL_MINUTES', '60'))
     WAVE_PBI_PUBLISH_MINUTES = int(setting('WAVE_PBI_PUBLISH_MINUTES', '15'))
-    WAVE_PBI_LEAD_MINUTES = int(setting('WAVE_PBI_LEAD_MINUTES', '15'))
+    # 5 fits every example the user gave: a load done at 10:50 shows at 11:15, one done at 9:55 at 11:15.
+    WAVE_PBI_LEAD_MINUTES = int(setting('WAVE_PBI_LEAD_MINUTES', '5'))
 
 
 class ProductionConfig(Config):

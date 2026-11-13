@@ -30,6 +30,7 @@ from app.utils.log_file import AppendFileHandler
 from app.utils.timezone import now_eastern
 from app.utils.wave_refresh import (
     SOURCE_TO_STAGING,
+    PowerBiSchedule,
     WaveRefreshError,
     archive_export,
     check_not_older,
@@ -860,3 +861,25 @@ def test_development_keeps_loading_off_by_default():
         "from app.config import config; print(config['development'].WAVE_REFRESH_ENABLED)"
     )
     assert result.stdout.split() == ['False']
+
+
+# ---------------------------------------------------------------------------
+# Power BI estimate
+# ---------------------------------------------------------------------------
+
+def server_schedule():
+    names = [name for name in dir(ProductionConfig) if name.startswith('WAVE_PBI_')]
+    return PowerBiSchedule.from_config({name: getattr(ProductionConfig, name) for name in names})
+
+
+@pytest.mark.parametrize('finished, shows', [
+    ('2026-11-13 10:50:13', '2026-11-13 11:15'),  # The load that showed 12:15 by mistake.
+    ('2026-11-13 10:54:59', '2026-11-13 11:15'),
+    ('2026-11-13 10:55:01', '2026-11-13 12:15'),
+    ('2026-11-13 10:00:00', '2026-11-13 11:15'),  # From the user's first request for this estimate.
+    ('2026-11-13 09:55:20', '2026-11-13 11:15'),  # Same request: 9:55 misses the 10:00 refresh.
+    ('2026-11-12 17:30:00', '2026-11-13 09:15'),  # After the last refresh, the next morning.
+])
+def test_power_bi_estimate_matches_the_users_examples(finished, shows):
+    estimate = server_schedule().estimate(datetime.strptime(finished, '%Y-%m-%d %H:%M:%S'))
+    assert datetime.fromisoformat(estimate['visible_at']).strftime('%Y-%m-%d %H:%M') == shows
